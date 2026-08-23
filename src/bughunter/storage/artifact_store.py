@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from uuid import UUID
 
-from bughunter.contracts.artifacts import ArtifactDraft, ArtifactRef, ArtifactKind
+from bughunter.contracts.artifacts import ArtifactDraft, ArtifactRef
 
 
 class ArtifactStore:

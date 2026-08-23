@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import json
 import subprocess
 import sys
@@ -8,7 +7,7 @@ import threading
 import time
 from pathlib import Path
 
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, render_template_string, request
 
 app = Flask(__name__)
 app.config["JSON_SORT_KEYS"] = False
@@ -669,7 +668,8 @@ def api_export_json():
 
 @app.route("/api/export/csv")
 def api_export_csv():
-    import csv, io
+    import csv
+    import io
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(["severity", "title", "module", "confidence", "url", "evidence", "invariant", "remediation", "disposition"])
@@ -738,7 +738,7 @@ def api_tokens():
 
 @app.route("/api/tokens/add", methods=["POST"])
 def api_token_add():
-    from bughunter.auth.tokens import TokenManager, AuthToken, AuthType
+    from bughunter.auth.tokens import AuthToken, AuthType, TokenManager
     data = request.json
     tm = TokenManager()
     auth_file = _projects_dir / "auth.yaml"
@@ -770,8 +770,8 @@ def api_token_remove():
 
 @app.route("/api/tokens/check")
 def api_token_check():
-    from bughunter.auth.tokens import TokenManager
     from bughunter.auth.policy import AuthPolicyManager
+    from bughunter.auth.tokens import TokenManager
     tm = TokenManager()
     pm = AuthPolicyManager(tm)
     auth_file = _projects_dir / "auth.yaml"

@@ -1,28 +1,21 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
-from typing import Optional
 
 import typer
 import yaml
 from rich.console import Console
 from rich.table import Table
 
-from bughunter.contracts.enums import RiskLevel, ScopeAction
+from bughunter.auth.policy import AuthPolicyManager
+from bughunter.auth.tokens import AuthToken, AuthType, TokenManager
 from bughunter.contracts.policy import (
     AuthorizationManifest,
-    CompiledPolicy,
-    ScopePolicy,
     CanonicalUrl,
+    ScopePolicy,
 )
 from bughunter.control.authorization import AuthorizationManager
-from bughunter.control.policy_compiler import PolicyCompiler
-from bughunter.control.planner import Planner
-from bughunter.storage.database import Database
-from bughunter.auth.tokens import TokenManager, AuthToken, AuthType
-from bughunter.auth.policy import AuthPolicyManager
 
 app = typer.Typer(
     name="bughunter",
@@ -106,7 +99,7 @@ def init(
 
     console.print(f"[green]Project initialized: {ws}[/green]")
     console.print(f"  Config: {config_path}")
-    console.print(f"  Edit scope.allowed_hosts to begin.")
+    console.print("  Edit scope.allowed_hosts to begin.")
 
 
 # ────────────────────────────────────────────────────────────────
@@ -224,8 +217,6 @@ def auth_tokens(
     check: bool = typer.Option(False, "--check", help="Check token health"),
 ) -> None:
     """List auth tokens and check health."""
-    from bughunter.auth.tokens import TokenManager
-    from bughunter.auth.policy import AuthPolicyManager
 
     ap = Path(auth_file)
     tm = TokenManager()
@@ -275,7 +266,6 @@ def auth_add_token(
     auth_file: str = typer.Option("auth.yaml", help="Auth config file path"),
 ) -> None:
     """Add an auth token to the auth config."""
-    from bughunter.auth.tokens import TokenManager, AuthToken, AuthType
 
     ap = Path(auth_file)
     tm = TokenManager()
@@ -300,7 +290,6 @@ def auth_validate_token(
     token_value: str = typer.Argument(help="Token value to validate (JWT or bearer)"),
 ) -> None:
     """Validate a JWT token and show claims."""
-    from bughunter.auth.tokens import parse_jwt_expiry
     import base64
     import json
 
@@ -319,19 +308,19 @@ def auth_validate_token(
                 import time
                 remaining = exp - time.time()
                 if remaining <= 0:
-                    console.print(f"  Status: [red]EXPIRED[/red]")
+                    console.print("  Status: [red]EXPIRED[/red]")
                 else:
                     console.print(f"  Status: [green]valid for {remaining:.0f}s[/green]")
         except Exception as e:
             console.print(f"[red]Failed to parse JWT: {e}[/red]")
     else:
-        console.print(f"[cyan]Token type: non-JWT bearer/header token[/cyan]")
+        console.print("[cyan]Token type: non-JWT bearer/header token[/cyan]")
         console.print(f"  Length: {len(token_value)} chars")
         console.print(f"  Prefix: {token_value[:20]}...")
 @app.command()
 def modules(
     list_all: bool = typer.Option(False, "--list", "-l", help="List all modules"),
-    module_id: Optional[str] = typer.Argument(None, help="Show details for a specific module"),
+    module_id: str | None = typer.Argument(None, help="Show details for a specific module"),
 ) -> None:
     """List available modules or show details for a specific module."""
     BUILTIN_MODULES = [
@@ -432,19 +421,20 @@ def doctor(json_output: bool = typer.Option(False, "--json")) -> None:
 def scan(
     target: str = typer.Argument(help="Target domain to scan"),
     config: str = typer.Option(CONFIG_NAME, help="Config file path"),
-    manifest: Optional[str] = typer.Option(None, help="Authorization manifest path"),
+    manifest: str | None = typer.Option(None, help="Authorization manifest path"),
     passive_only: bool = typer.Option(False, "--passive-only", help="Passive recon only (no HTTP to target)"),
-    out: Optional[str] = typer.Option(None, "--out", help="Output directory"),
+    out: str | None = typer.Option(None, "--out", help="Output directory"),
     concurrency: int = typer.Option(20, help="Max concurrent requests"),
     rate_limit: float = typer.Option(10.0, help="Requests per second limit"),
-    resume: Optional[str] = typer.Option(None, "--resume", help="Resume a previous scan by ID"),
+    resume: str | None = typer.Option(None, "--resume", help="Resume a previous scan by ID"),
 ) -> None:
     """Run a security scan against a target domain."""
     import asyncio
     import time as _time
-    from bughunter.core.engine import ScanEngine, ScanConfig
-    from bughunter.reporting.native_json import generate_json_report
+
+    from bughunter.core.engine import ScanConfig, ScanEngine
     from bughunter.reporting.markdown import generate_markdown_report
+    from bughunter.reporting.native_json import generate_json_report
 
     config_path = Path(config)
     if not config_path.exists():
@@ -463,7 +453,7 @@ def scan(
         resume_scan_id=resume,
     )
 
-    console.print(f"[bold cyan]BUGHUNTER v0.1.0 — Scan Starting[/bold cyan]")
+    console.print("[bold cyan]BUGHUNTER v0.1.0 — Scan Starting[/bold cyan]")
     console.print(f"  Target:      {target}")
     console.print(f"  Profile:     {'passive' if passive_only else 'safe'}")
     console.print(f"  Manifest:    {manifest or '(none)'}")
@@ -513,9 +503,10 @@ def web(
     open_browser: bool = typer.Option(True, "--open/--no-open", help="Open browser automatically"),
 ) -> None:
     """Start the local web dashboard."""
-    from bughunter.web.dashboard import create_app
     import json
     import webbrowser
+
+    from bughunter.web.dashboard import create_app
 
     fd = Path(findings_dir)
     findings_file = fd / "findings.json"
@@ -536,7 +527,7 @@ def web(
             target = data.get("target", "")
 
     app_instance = create_app(findings, target)
-    console.print(f"[bold cyan]Bughunter Dashboard[/bold cyan]")
+    console.print("[bold cyan]Bughunter Dashboard[/bold cyan]")
     console.print(f"  Findings: {len(findings)}")
     console.print(f"  Target: {target or '(unknown)'}")
     console.print(f"  URL: http://{bind}:{port}")

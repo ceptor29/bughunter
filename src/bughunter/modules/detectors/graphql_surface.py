@@ -22,31 +22,31 @@ GRAPHQL_ENDPOINTS = ["/graphql", "/graphiql", "/v1/graphql", "/v2/graphql", "/ap
 INTROSPECTION_QUERY = '{"query":"{ __schema { queryType { name } mutationType { name } types { name kind } } }"}'
 
 SENSITIVE_TYPE_PATTERNS = [
-    re.compile(r"password", re.I),
-    re.compile(r"secret", re.I),
-    re.compile(r"token", re.I),
-    re.compile(r"session", re.I),
-    re.compile(r"email", re.I),
-    re.compile(r"phone", re.I),
-    re.compile(r"address", re.I),
-    re.compile(r"credit.?card", re.I),
-    re.compile(r"payment", re.I),
-    re.compile(r"admin", re.I),
-    re.compile(r"role", re.I),
-    re.compile(r"permission", re.I),
-    re.compile(r"auth", re.I),
+    re.compile(r"password", re.IGNORECASE),
+    re.compile(r"secret", re.IGNORECASE),
+    re.compile(r"token", re.IGNORECASE),
+    re.compile(r"session", re.IGNORECASE),
+    re.compile(r"email", re.IGNORECASE),
+    re.compile(r"phone", re.IGNORECASE),
+    re.compile(r"address", re.IGNORECASE),
+    re.compile(r"credit.?card", re.IGNORECASE),
+    re.compile(r"payment", re.IGNORECASE),
+    re.compile(r"admin", re.IGNORECASE),
+    re.compile(r"role", re.IGNORECASE),
+    re.compile(r"permission", re.IGNORECASE),
+    re.compile(r"auth", re.IGNORECASE),
 ]
 
 SENSITIVE_FIELD_PATTERNS = [
-    re.compile(r"\bpassword\b", re.I),
-    re.compile(r"\bsecret\b", re.I),
-    re.compile(r"\btoken\b", re.I),
-    re.compile(r"\bapi.?key\b", re.I),
-    re.compile(r"\bprivate.?key\b", re.I),
-    re.compile(r"\bsocial.?security\b", re.I),
-    re.compile(r"\bssn\b", re.I),
-    re.compile(r"\bcredit.?card\b", re.I),
-    re.compile(r"\bcvv\b", re.I),
+    re.compile(r"\bpassword\b", re.IGNORECASE),
+    re.compile(r"\bsecret\b", re.IGNORECASE),
+    re.compile(r"\btoken\b", re.IGNORECASE),
+    re.compile(r"\bapi.?key\b", re.IGNORECASE),
+    re.compile(r"\bprivate.?key\b", re.IGNORECASE),
+    re.compile(r"\bsocial.?security\b", re.IGNORECASE),
+    re.compile(r"\bssn\b", re.IGNORECASE),
+    re.compile(r"\bcredit.?card\b", re.IGNORECASE),
+    re.compile(r"\bcvv\b", re.IGNORECASE),
 ]
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-from enum import StrEnum, auto
+from enum import StrEnum
 from typing import Any
 from uuid import UUID, uuid4
 

@@ -1,4 +1,4 @@
-from .database import Database
 from .artifact_store import ArtifactStore
+from .database import Database
 
-__all__ = ["Database", "ArtifactStore"]
+__all__ = ["ArtifactStore", "Database"]

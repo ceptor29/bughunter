@@ -8,21 +8,16 @@ from typing import Any
 
 import httpx
 
-from bughunter.contracts.policy import CompiledPolicy, ScopePolicy, CanonicalUrl, ScopeAction
-from bughunter.contracts.tasks import TaskSpec, TaskState, TaskBudget
-from bughunter.contracts.enums import RiskLevel, SkipReason
-from bughunter.execution.http_gateway import HttpGateway
-from bughunter.execution.rate_limits import RateLimiter
-from bughunter.execution.redaction import Redactor
-from bughunter.execution.budgets import BudgetManager
+from bughunter.auth.policy import AuthPolicyManager
+from bughunter.auth.tokens import TokenManager
+from bughunter.contracts.policy import AuthorizationManifest, CompiledPolicy, ScopePolicy
 from bughunter.control.authorization import AuthorizationManager
 from bughunter.control.cancellation import CancellationManager
 from bughunter.control.lifecycle import ScanLifecycle
-from bughunter.control.planner import Planner
+from bughunter.execution.budgets import BudgetManager
+from bughunter.execution.rate_limits import RateLimiter
+from bughunter.execution.redaction import Redactor
 from bughunter.storage.database import Database
-from bughunter.auth.tokens import TokenManager
-from bughunter.auth.policy import AuthPolicyManager
-
 
 # Profile-based request restrictions
 SAFE_MUTATION_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -120,8 +115,9 @@ class ScanEngine:
             except NotImplementedError:
                 pass  # Windows doesn't support add_signal_handler
 
-        import yaml
         from pathlib import Path
+
+        import yaml
         config_path = Path(self.config.config_path)
         if config_path.exists():
             with open(config_path) as f:
@@ -208,7 +204,7 @@ class ScanEngine:
 
     async def _run_recon(self, completed: set[str] | None = None) -> None:
         from bughunter.modules.passive.provider_sources import enumerate_subdomains
-        from bughunter.modules.recon.dns_resolution import resolve_host, detect_wildcard
+        from bughunter.modules.recon.dns_resolution import detect_wildcard, resolve_host
         from bughunter.modules.recon.http_probe import probe_host
 
         self.ctx.warnings.append("Phase: subdomain enumeration...")
@@ -273,17 +269,20 @@ class ScanEngine:
         self.ctx.warnings.append(f"Recon complete: {len(self.ctx.alive_hosts)} alive hosts from {len(self.ctx.subdomains)} subdomains")
 
     async def _run_detection(self, completed: set[str] | None = None) -> None:
-        from bughunter.modules.recon.crawl import crawl_page
         from bughunter.modules.detectors.exposed_artifacts import scan_exposed_artifacts
-        from bughunter.modules.detectors.repository_metadata import scan_repository_metadata
-        from bughunter.modules.detectors.takeover import scan_takeover
-        from bughunter.modules.detectors.security_controls import scan_security_controls
         from bughunter.modules.detectors.graphql_surface import scan_graphql_surface
-        from bughunter.modules.surface.component_inventory import scan_component_inventory, check_dependency_advisories
+        from bughunter.modules.detectors.repository_metadata import scan_repository_metadata
+        from bughunter.modules.detectors.security_controls import scan_security_controls
+        from bughunter.modules.detectors.takeover import scan_takeover
+        from bughunter.modules.recon.crawl import crawl_page
+        from bughunter.modules.surface.component_inventory import (
+            check_dependency_advisories,
+            scan_component_inventory,
+        )
         from bughunter.modules.surface.endpoint_inventory import scan_endpoint_inventory
 
         self.ctx.warnings.append("Phase: crawling alive hosts...")
-        all_pages: dict[str, str] = {}
+        _all_pages: dict[str, str] = {}
         base_headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
         async with httpx.AsyncClient(follow_redirects=False, http2=True, timeout=10.0, headers=base_headers) as client:

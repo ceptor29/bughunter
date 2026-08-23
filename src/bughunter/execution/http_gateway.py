@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import asyncio
-from typing import Any
-
 import httpx
 
 from bughunter.contracts.enums import HttpMethod
-from bughunter.contracts.policy import CompiledPolicy, ScopeDecision, CanonicalUrl, ScopeAction
+from bughunter.contracts.policy import CanonicalUrl, CompiledPolicy, ScopeDecision
+
 from .rate_limits import RateLimiter
 
 
@@ -56,7 +54,7 @@ class HttpGateway:
         )
         return self
 
-    async def __aexit__(self, *args: Any) -> None:
+    async def __aexit__(self, *args: object) -> None:
         if self._client:
             await self._client.aclose()
 

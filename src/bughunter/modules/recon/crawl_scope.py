@@ -95,7 +95,7 @@ def extract_same_origin_urls(html: str, origin_url: str, scope: CrawlScope) -> l
     origin_host = parsed_origin.hostname or ""
     urls: list[str] = []
 
-    for m in re.finditer(r'(?:href|src|action)="([^"]+)"', html, re.I):
+    for m in re.finditer(r'(?:href|src|action)="([^"]+)"', html, re.IGNORECASE):
         raw = m.group(1)
         if raw.startswith("#") or raw.startswith("javascript:") or raw.startswith("mailto:"):
             continue

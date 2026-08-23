@@ -1,10 +1,10 @@
-from .component_inventory import scan_component_inventory, check_dependency_advisories, Component
-from .endpoint_inventory import scan_endpoint_inventory, Endpoint
+from .component_inventory import Component, check_dependency_advisories, scan_component_inventory
+from .endpoint_inventory import Endpoint, scan_endpoint_inventory
 
 __all__ = [
-    "scan_component_inventory",
-    "check_dependency_advisories",
     "Component",
-    "scan_endpoint_inventory",
     "Endpoint",
+    "check_dependency_advisories",
+    "scan_component_inventory",
+    "scan_endpoint_inventory",
 ]

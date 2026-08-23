@@ -1,3 +1,3 @@
-from .dns_resolution import resolve_host, DnsResult
+from .dns_resolution import DnsResult, resolve_host
 
-__all__ = ["resolve_host", "DnsResult"]
+__all__ = ["DnsResult", "resolve_host"]

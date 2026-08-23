@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+from bughunter.contracts.evidence import ValidationAttemptDraft
 from bughunter.contracts.findings import Finding, FindingState
-from bughunter.contracts.evidence import ObservationDraft, ValidationAttemptDraft, ObservationState
-
 
 # Valid state transitions per V2 evidence lifecycle
 VALID_TRANSITIONS: dict[FindingState, set[FindingState]] = {

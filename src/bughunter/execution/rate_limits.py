@@ -12,10 +12,9 @@ class RateLimiter:
         self._lock = asyncio.Lock()
 
     async def wait(self) -> None:
-        async with self._semaphore:
-            async with self._lock:
-                now = time.monotonic()
-                elapsed = now - self._last_request
-                if elapsed < self._min_interval:
-                    await asyncio.sleep(self._min_interval - elapsed)
-                self._last_request = time.monotonic()
+        async with self._semaphore, self._lock:
+            now = time.monotonic()
+            elapsed = now - self._last_request
+            if elapsed < self._min_interval:
+                await asyncio.sleep(self._min_interval - elapsed)
+            self._last_request = time.monotonic()

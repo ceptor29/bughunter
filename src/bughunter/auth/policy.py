@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from .tokens import AuthToken, AuthType, TokenManager
+from .tokens import AuthType, TokenManager
 
 
 @dataclass

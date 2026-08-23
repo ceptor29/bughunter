@@ -3,16 +3,13 @@ from __future__ import annotations
 import fnmatch
 import hashlib
 import ipaddress
-import re
 from datetime import datetime, timezone
 from pathlib import PurePosixPath
-from typing import Literal
 from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field, field_validator
 
 from .enums import HttpMethod, RiskLevel, ScopeAction
-
 
 # ---------------------------------------------------------------------------
 # Canonical URL

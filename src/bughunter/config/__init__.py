@@ -1,6 +1,19 @@
-from .profiles import Profile, ScopeConfig, ExecutionConfig, ModuleConfig, CrawlConfig, load_profile, BUILTIN_PROFILES
+from .profiles import (
+    BUILTIN_PROFILES,
+    CrawlConfig,
+    ExecutionConfig,
+    ModuleConfig,
+    Profile,
+    ScopeConfig,
+    load_profile,
+)
 
 __all__ = [
-    "Profile", "ScopeConfig", "ExecutionConfig", "ModuleConfig", "CrawlConfig",
-    "load_profile", "BUILTIN_PROFILES",
+    "BUILTIN_PROFILES",
+    "CrawlConfig",
+    "ExecutionConfig",
+    "ModuleConfig",
+    "Profile",
+    "ScopeConfig",
+    "load_profile",
 ]

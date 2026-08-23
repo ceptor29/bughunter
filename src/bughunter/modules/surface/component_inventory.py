@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import httpx
 
@@ -15,16 +15,16 @@ class Component:
 
 
 HEADER_PATTERNS = [
-    re.compile(r"Server:\s*(\S+)", re.I),
-    re.compile(r"X-Powered-By:\s*(.+?)(?:;|$)", re.I),
+    re.compile(r"Server:\s*(\S+)", re.IGNORECASE),
+    re.compile(r"X-Powered-By:\s*(.+?)(?:;|$)", re.IGNORECASE),
 ]
 
 HTML_PATTERNS = [
-    re.compile(r"wp-content/themes/([a-zA-Z0-9_-]+)", re.I),
-    re.compile(r"wp-includes/js/([a-zA-Z0-9_-]+)/", re.I),
-    re.compile(r"/(?:jquery|angular|react|vue|bootstrap|tailwind|backbone|ember|svelte)[/.-]v?(\d+\.\d+[\d.]*)(?:/|\.js)", re.I),
-    re.compile(r"generator\"\s+content=\"([^\"]+)\"", re.I),
-    re.compile(r"<script[^>]+src=\"([^\"]+/lib/([a-zA-Z0-9_-]+)/[^\"]+)\"", re.I),
+    re.compile(r"wp-content/themes/([a-zA-Z0-9_-]+)", re.IGNORECASE),
+    re.compile(r"wp-includes/js/([a-zA-Z0-9_-]+)/", re.IGNORECASE),
+    re.compile(r"/(?:jquery|angular|react|vue|bootstrap|tailwind|backbone|ember|svelte)[/.-]v?(\d+\.\d+[\d.]*)(?:/|\.js)", re.IGNORECASE),
+    re.compile(r"generator\"\s+content=\"([^\"]+)\"", re.IGNORECASE),
+    re.compile(r"<script[^>]+src=\"([^\"]+/lib/([a-zA-Z0-9_-]+)/[^\"]+)\"", re.IGNORECASE),
 ]
 
 JS_PATTERNS = [
@@ -39,14 +39,14 @@ JS_PATTERNS = [
 ]
 
 VERSION_PATTERNS = [
-    re.compile(r"v(\d+\.\d+\.\d+[\w.-]*)", re.I),
-    re.compile(r"version[\"':\s]+(\d+\.\d+[\d.]*[a-zA-Z0-9.-]*)", re.I),
-    re.compile(r"(\d+\.\d+\.\d{1,4}[\w.-]*)", re.I),
+    re.compile(r"v(\d+\.\d+\.\d+[\w.-]*)", re.IGNORECASE),
+    re.compile(r"version[\"':\s]+(\d+\.\d+[\d.]*[a-zA-Z0-9.-]*)", re.IGNORECASE),
+    re.compile(r"(\d+\.\d+\.\d{1,4}[\w.-]*)", re.IGNORECASE),
 ]
 
 CDN_PATTERNS = [
-    re.compile(r"cdn\.([a-zA-Z0-9_-]+)\.com", re.I),
-    re.compile(r"(?:unpkg|jsdelivr|cdnjs|cloudflare)\.com/([a-zA-Z0-9_-]+)", re.I),
+    re.compile(r"cdn\.([a-zA-Z0-9_-]+)\.com", re.IGNORECASE),
+    re.compile(r"(?:unpkg|jsdelivr|cdnjs|cloudflare)\.com/([a-zA-Z0-9_-]+)", re.IGNORECASE),
 ]
 
 

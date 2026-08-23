@@ -4,10 +4,8 @@ import json
 import sqlite3
 import time
 from pathlib import Path
-from uuid import UUID
 
-from bughunter.contracts.tasks import TaskSpec, TaskState
-
+from bughunter.contracts.tasks import TaskSpec
 
 SCHEMA_VERSION = 1
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import fnmatch
+
 from bughunter.contracts.policy import AuthorizationManifest, CompiledPolicy, ScopePolicy
 
 
@@ -33,15 +35,11 @@ class PolicyCompiler:
         for asset in manifest.allowed_assets:
             asset_clean = asset.lower().strip(".")
             found = any(
-                asset_clean == h.lower().strip(".") or fnmatch(asset_clean, h.lower())
+                asset_clean == h.lower().strip(".") or fnmatch.fnmatch(asset_clean, h.lower())
                 for h in scope.allowed_hosts
             )
             if not found:
-                import fnmatch
-                found = any(
-                    fnmatch.fnmatch(h.lower(), asset_clean)
-                    for h in scope.allowed_hosts
-                )
+                errors.append(f"asset '{asset}' not in scope")
         return errors
 
     @property

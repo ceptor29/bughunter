@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
-from typing import Any
 
-import dns.resolver
 import dns.exception
+import dns.resolver
 
-from bughunter.contracts.policy import CompiledPolicy, CanonicalUrl, ScopeAction
+from bughunter.contracts.policy import CanonicalUrl, CompiledPolicy
 
 
 @dataclass
@@ -31,7 +30,7 @@ class DnsGateway:
         if host in self._cache:
             return self._cache[host]
 
-        canonical = CanonicalUrl.from_raw(f"https://{host}")
+        _canonical = CanonicalUrl.from_raw(f"https://{host}")
         if not self._policy.source.is_host_allowed(host):
             return DnsAnswer(
                 host=host,

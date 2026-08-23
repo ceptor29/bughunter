@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 from bughunter.contracts.enums import RiskLevel, SkipReason
 from bughunter.contracts.policy import AuthorizationManifest, CompiledPolicy
 

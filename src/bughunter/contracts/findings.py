@@ -6,8 +6,6 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
 
-from .enums import ResultState
-
 
 class FindingState(StrEnum):
     OBSERVATION = "observation"

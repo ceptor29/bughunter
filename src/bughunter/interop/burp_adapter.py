@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import json
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse, parse_qs
-
-import json
+from urllib.parse import parse_qs, urlparse
 
 
 @dataclass

@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from bughunter.core.dispositions import DispositionTracker, DispositionKind
+from bughunter.core.dispositions import DispositionTracker
 
 
 @dataclass
@@ -90,9 +90,7 @@ class ClosureManager:
                 else:
                     report.open += 1
             else:
-                if state == "observation":
-                    report.open += 1
-                elif state == "confirmed":
+                if state == "observation" or state == "confirmed":
                     report.open += 1
 
         return report

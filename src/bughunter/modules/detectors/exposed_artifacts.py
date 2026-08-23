@@ -134,7 +134,7 @@ async def scan_exposed_artifacts(
             return
 
         body = resp.text[:15000]
-        content_type = resp.headers.get("content-type", "")
+        _content_type = resp.headers.get("content-type", "")
         content_length = resp.headers.get("content-length", "0")
 
         if int(content_length or "0") > 500000:

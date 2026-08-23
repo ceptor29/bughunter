@@ -16,7 +16,7 @@ class Endpoint:
 
 
 PARAM_PATTERNS = [
-    re.compile(r"[?&](\w+)=", re.I),
+    re.compile(r"[?&](\w+)=", re.IGNORECASE),
     re.compile(r":(\w+)(?:/|$)"),
 ]
 

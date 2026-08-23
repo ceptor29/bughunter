@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Any
 
-from bughunter.contracts.enums import SkipReason
-from bughunter.contracts.tasks import TaskSpec, TaskState, TaskMetrics
+from bughunter.contracts.tasks import TaskSpec, TaskState
 
 
 class Scheduler:
