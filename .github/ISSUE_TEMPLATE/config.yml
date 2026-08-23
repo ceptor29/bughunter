@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/ceptor29/bughunter/issues
+    about: Use the issues tab for questions and discussion.

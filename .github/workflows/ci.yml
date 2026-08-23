@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    name: Lint, typecheck, test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Lint
+        run: |
+          python -m ruff check src/
+          python -m ruff format --check src/
+
+      - name: Typecheck
+        run: python -m mypy src/ --ignore-missing-imports
+
+      - name: Test
+        run: python -m pytest tests/ -v
+
+  smoke:
+    name: Smoke (CLI boots)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+
+      - name: CLI help
+        run: python -m bughunter.cli --help
+
+      - name: CLI doctor
+        run: python -m bughunter.cli doctor
+
+      - name: CLI modules
+        run: python -m bughunter.cli modules --list
+
+      - name: Init project
+        run: python -m bughunter.cli init ci-test
+
+      - name: Passive scan
+        run: |
+          python -m bughunter.cli scan scanme.nmap.org \
+            --config .bughunter/ci-test/bughunter.yaml \
+            --passive-only
+
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: python -m pip install build
+
+      - name: Build
+        run: python -m build
+
+      - name: Check package
+        run: |
+          python -m pip install twine
+          twine check dist/*

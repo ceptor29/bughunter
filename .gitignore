@@ -1,0 +1,64 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# bughunter runtime
+.bughunter/
+reports_*/
+*.db
+*.db-shm
+*.db-wal
+
+# Auth secrets (NEVER commit these)
+auth.yaml
+manifest.yaml
+.env
+.env.local
+
+# Logs
+*.log
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Build artifacts
+*.tar.gz
+*.zip
